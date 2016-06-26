@@ -29,7 +29,8 @@ public class Ping extends Thread{
 
     public Ping(String ip) throws IOException {
         this.ip = ip;                               //use the inputted ip as a local string to be used in this class
-        lineCount = rtoCount = 0;                   //reset total lines and packet loss average every object creation
+        rtoCount = 0;                   //reset total lines and packet loss average every object creation
+        lineCount = -1;
         p = rt.exec("ping " + ip + " /t");          //runtime command: ping *ip address* -t
 
         last20Pings = new Integer[20];   //each ping is stored here
@@ -69,10 +70,11 @@ public class Ping extends Thread{
                 if(word.contains(pingToken)) {        // if 'time=' is found
                     ping = word.substring(word.indexOf("=") + 1, word.indexOf("ms"));   //actual ping is after the character '=' and before 'ms'
 
-                    if(iterator != 20)
-                        last20Pings[iterator++] = Integer.parseInt(ping);
-                    else
-                        iterator = 0;
+                    if(iterator == 20)
+                        iterator = 0;           //iterator resets, thus overwriting the first index
+
+                    last20Pings[iterator++] = Integer.parseInt(ping);
+
                     averagePing = averagePing(last20Pings);
 
                 }
@@ -87,11 +89,11 @@ public class Ping extends Thread{
         /*
             To be deleted once GUI is in development
          */
-        return  "Pinging " + ip
+        return  "\n\nPinging " + ip
                 + "\nTotal Lines: " + lineCount
                 + "\nPing: " + averagePing
                 + "\nTime Out Count: " + rtoCount
-                + "\nPacket Loss: " + ((float)Math.round(averageRTO * 100)) + "%";
+                + "\nPacket Loss: " + Math.round(averageRTO * 100) + "%";
     }
 
     private final int averagePing(Integer[] pingsArray){
@@ -99,12 +101,10 @@ public class Ping extends Thread{
         int i = 0; //while iterator
         int totalPing = 0;
 
-        //show pings
-
+        //show array content
+        System.out.println("Last 20 ping results: ");
         for(Integer j : pingsArray)
             System.out.print(j + " ");
-
-        System.out.println(i);
 
         while(i < pingsArray.length){
             if(pingsArray[i] != null)
@@ -112,9 +112,6 @@ public class Ping extends Thread{
             else
                 break;
         }
-
-
-        System.out.println(i);
 
         return totalPing / i;
     }
