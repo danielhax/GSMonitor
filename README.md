@@ -7,6 +7,6 @@ Aimed to hopefully be useful to gamers who wants a small application that consta
 
 Check out my pretty new blog: watideas.wordpress.com
 
-Please, leave comments, suggestions and criticisms about the program or the blog or both!
+Please, leave comments, suggestions and criticisms about the program or the blog or both if you find it interesting!
 
 Thanks!
