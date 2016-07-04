@@ -1,13 +1,9 @@
 package pkg;
 
-import com.sun.org.apache.xml.internal.serializer.utils.SystemIDResolver;
-import com.sun.org.apache.xpath.internal.SourceTree;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.StringTokenizer;
 
 /**
  * Created by DANIEL on 20/05/2016.
@@ -18,23 +14,25 @@ import java.util.StringTokenizer;
 
 public class Ping extends Thread{
 
+    //STATIC VARIABLES
     private final static Runtime rt = Runtime.getRuntime();
     private final Process p;
-    private int lineCount;
-    private int rtoCount;
+    private final String ip;
+    private final static String pingToken = "time="; //this is the prefix to the actual integer result, which is the ping
+
+    private int overallLineCount;
+    private int rtoCount;                           //request time out counter
     private float averageRTO;
-    private String ip;
     private Integer[] last20Pings;
+
     private int iterator;
 
     public Ping(String ip) throws IOException {
         this.ip = ip;                               //use the inputted ip as a local string to be used in this class
-        rtoCount = 0;                   //reset total lines and packet loss average every object creation
-        lineCount = -1;
         p = rt.exec("ping " + ip + " /t");          //runtime command: ping *ip address* -t
 
-        last20Pings = new Integer[20];   //each ping is stored here
-        Arrays.fill(last20Pings, null);  //fill array with null values
+        rtoCount = 0;
+        overallLineCount = -1;          //-1 to start count with 1; first 2 fetched lines are not needed
         iterator = 0;                 //iterator for 'last20Pings' array
     }
 
@@ -42,21 +40,28 @@ public class Ping extends Thread{
     public void run() {
 
         BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));   //get output from executed runtime command
-        String line = null;
+        String fetchedLine;
 
         try {
-            while ((line = input.readLine()) != null) {
-                System.out.println(printResult(line));
-                lineCount++;
+            last20Pings = new Integer[20];
+            Arrays.fill(last20Pings, null);                 //fill array with null values to identify if an index has been used
+
+            while ((fetchedLine = input.readLine()) != null) {
+                if(Thread.interrupted()) {                  //stopped pinging
+                    System.out.println("Inner interrupt");
+                    break;
+                }
+
+                System.out.println(printResult(fetchedLine));
+                overallLineCount++;
 
                 for (int i = 0; i < 3; ++i) System.out.println("\r \n");    //clear screen
             }
-        } catch (IOException e) {
+        } catch (IOException  e) {
             e.printStackTrace();
         }
     }                         //run thread and keep pinging an address until stopped
 
-    private static final String pingToken = "time="; //this is the prefix to the actual integer result, which is the ping
     private String ping;
     private int averagePing;
 
@@ -83,14 +88,14 @@ public class Ping extends Thread{
             }
         }
 
-        averageRTO = (float)rtoCount / (float)lineCount;        //get average packet loss
+        averageRTO = (float)rtoCount / (float) overallLineCount;        //get average packet loss
 
         //////////////OUTPUT SECTION///////////////////////
         /*
             To be deleted once GUI is in development
          */
         return  "\n\nPinging " + ip
-                + "\nTotal Lines: " + lineCount
+                + "\nTotal Lines: " + overallLineCount
                 + "\nPing: " + averagePing
                 + "\nTime Out Count: " + rtoCount
                 + "\nPacket Loss: " + Math.round(averageRTO * 100) + "%";

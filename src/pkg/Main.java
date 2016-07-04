@@ -1,9 +1,7 @@
 package pkg;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
@@ -12,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 
 public class Main extends Application{
 
@@ -24,8 +23,7 @@ public class Main extends Application{
 //        primaryStage.show();
 //    }
 
-    Button button, button2;
-    public Ping x = null;
+
 
     public static void main(String[] args) {
         launch(args);       //launch application as javfx application
@@ -37,7 +35,7 @@ public class Main extends Application{
 
     //javafx main method
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws IOException {
 
             //STAGE/WINDOW PROPERTIES SECTION//
         primaryStage.setTitle("GSMonitor");
@@ -45,8 +43,8 @@ public class Main extends Application{
         ////////////////////////////////////////////
 
                     //COMPONENTS SECTION//
-        button = new Button("Start");
-        button2 = new Button("Stop");
+        Button button = new Button("Start");
+        Button button2 = new Button("Stop");
         ////////////////////////////////////////////
 
                     //LAYOUT SECTION//
@@ -69,19 +67,14 @@ public class Main extends Application{
 
                     //ACTION SECTION//
 
+        final Ping x = new Ping("sgp-2.valve.net");
 
         button.setOnAction(new EventHandler<ActionEvent>() {
+
             @Override
-            public void handle(javafx.event.ActionEvent event) {
+            public void handle(ActionEvent event) {
                 //create a new object: 1 ping 1 object
-                    try {
-                        x = new Ping("sgp-2.valve.net");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    x.start();
-
-
+                x.start();
             }
         });
 
@@ -90,7 +83,8 @@ public class Main extends Application{
             public void handle(ActionEvent event) {
                 if(x.isAlive()){
                     x.interrupt();
-                    System.out.println("Process interrupted");
+                    if(x.isInterrupted())
+                        System.out.println("Outer interrupt");
                 }
             }
         });
