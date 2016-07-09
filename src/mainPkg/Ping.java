@@ -1,4 +1,4 @@
-package pkg;
+package mainPkg;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,15 +14,15 @@ import java.util.Arrays;
 
 public class Ping extends Thread{
 
-    //STATIC VARIABLES
+    //STATIC GLOBAL VARIABLES
     private final static Runtime rt = Runtime.getRuntime();
     private final Process p;
     private final String ip;
     private final static String pingToken = "time="; //this is the prefix to the actual integer result, which is the ping
 
+    //NON-STATIC GLOBAL VARIABLES
     private int overallLineCount;
     private int rtoCount;                           //request time out counter
-    private float averageRTO;
     private Integer[] last20Pings;
 
     private int iterator;
@@ -52,7 +52,7 @@ public class Ping extends Thread{
                     break;
                 }
 
-                System.out.println(printResult(fetchedLine));
+                System.out.println(pingAddress(fetchedLine));
                 overallLineCount++;
 
                 for (int i = 0; i < 3; ++i) System.out.println("\r \n");    //clear screen
@@ -62,10 +62,9 @@ public class Ping extends Thread{
         }
     }                         //run thread and keep pinging an address until stopped
 
-    private String ping;
-    private int averagePing;
-
-    private final String printResult(String lineToProcess){
+    private final String pingAddress(String lineToProcess){
+        String ping;
+        int averagePing = 0;
 
         if(lineToProcess.contains("Request timed out."))
             rtoCount++;
@@ -88,7 +87,7 @@ public class Ping extends Thread{
             }
         }
 
-        averageRTO = (float)rtoCount / (float) overallLineCount;        //get average packet loss
+        float averageRTO = (float)rtoCount / (float)overallLineCount;        //get average packet loss
 
         //////////////OUTPUT SECTION///////////////////////
         /*
