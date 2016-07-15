@@ -6,7 +6,8 @@
 <?import javafx.scene.text.Font?>
 
 
-<BorderPane fx:id="addBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="javafx.scene.layout.BorderPane" fx:id="addBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0"
+         xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <Button fx:id="addButton" mnemonicParsing="false" text="+" textAlignment="CENTER" textFill="#067912" BorderPane.alignment="CENTER">
          <font>
@@ -17,4 +18,4 @@
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
    </padding>
-</BorderPane>
+</fx:root>
