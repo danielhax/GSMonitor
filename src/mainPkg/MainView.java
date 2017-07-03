@@ -8,12 +8,12 @@ import java.io.IOException;
 /**
  * Created by DANIEL on 11/07/2016.
  */
-public class MainController extends HBox{
+public class MainView extends HBox{
 
 
-    public MainController(){
+    public MainView(){
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("View/main.fxml"));
 
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);

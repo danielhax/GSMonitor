@@ -29,11 +29,11 @@ public class Ping extends Thread{
 
     public Ping(String ip) throws IOException {
         this.ip = ip;                               //use the inputted ip as a local string to be used in this class
-        p = rt.exec("ping " + ip + " /t");          //runtime command: ping *ip address* -t
+        this.p = rt.exec("ping " + ip + " /t");          //runtime command: ping *ip address* -t
 
-        rtoCount = 0;
-        overallLineCount = -1;          //-1 to start count with 1; first 2 fetched lines are not needed
-        iterator = 0;                 //iterator for 'last20Pings' array
+        this.rtoCount = 0;
+        this.overallLineCount = -1;          //-1 to start count with 1; first 2 fetched lines are not needed
+        this.iterator = 0;                 //iterator for 'last20Pings' array
     }
 
 

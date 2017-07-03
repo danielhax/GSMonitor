@@ -1,7 +1,5 @@
 package mainPkg;
 
-import mainPkg.gridPkg.boxPkg.AddBox;
-import mainPkg.gridPkg.ServerGrid;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,15 +18,20 @@ public class Main extends Application{
 //        primaryStage.show();
 //    }
 
-    private MainController root;
+    private MainView root;
     public static short gridCount = 0;
-    private ArrayList<ServerGrid> gridList = new ArrayList<ServerGrid>();
+    private ArrayList<ServersGridView> grids = new ArrayList<ServersGridView>();
 
     public static void main(String[] args) {
         launch(args);       //launch application as javfx application
 
         //create a new object: 1 ping 1 object
-        //Ping x = new Ping("sgp-2.valve.net");
+        Ping x = null;
+        try {
+            x = new Ping("sgp-2.valve.net");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //x.start();
     }
 
@@ -36,13 +39,13 @@ public class Main extends Application{
     @Override
     public void start(Stage primaryStage) throws IOException {
 
-        root = new MainController();
+        this.root = new MainView();
         initialize();
 
             //STAGE/WINDOW PROPERTIES SECTION//
         primaryStage.setTitle("GSMonitor");
         primaryStage.setResizable(false);
-        primaryStage.setScene(new Scene(root));
+        primaryStage.setScene(new Scene(this.root));
 
         primaryStage.show();
         ///////////////////////////////////////////
@@ -53,13 +56,13 @@ public class Main extends Application{
         /*
         Add initial grid
          */
-        gridList.add(gridCount, new ServerGrid());
-        root.getChildren().add(gridList.get(gridCount));
+        grids.add(new ServersGridView());
+        root.getChildren().add(grids.get(gridCount));
 
         /*
         Set initial add box
          */
-        gridList.get(gridCount).getChildren().add(new AddBox());
+        grids.get(gridCount).getChildren().add(new AddBoxView());
 
     }
 

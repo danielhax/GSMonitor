@@ -1,4 +1,4 @@
-package mainPkg.gridPkg;
+package mainPkg;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.GridPane;
@@ -8,12 +8,12 @@ import java.io.IOException;
 /**
  * Created by DANIEL on 09/07/2016.
  */
-public class ServerGrid extends GridPane{
+public class ServersGridView extends GridPane{
 
-    public ServerGrid(){
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("serverGrid.fxml"));
+    public ServersGridView(){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("View/serverGrid.fxml"));
 
-        fxmlLoader.setRoot(this);
+        //fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
         try {
